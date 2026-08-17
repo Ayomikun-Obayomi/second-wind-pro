@@ -759,7 +759,7 @@ body::before{
 }
 .wire-row{
   display: grid;
-  grid-template-columns: 100px 1fr 200px 240px 60px;
+  grid-template-columns: 100px 1fr 200px 240px;
   gap: 30px;
   padding: 36px 0;
   border-bottom: 1px solid var(--line);
@@ -811,13 +811,6 @@ body::before{
   background: var(--purple);
   color: var(--on-purple);
 }
-.wire-row .go{
-  font-family: var(--serif); font-size: 28px;
-  color: var(--muted-2);
-  transition: color .35s, transform .35s;
-  text-align: center;
-}
-.wire-row:hover .go{color: var(--purple-bright); transform: translateX(6px);}
 
 /* ===== BRAND CTA ===== */
 .brand-cta{
@@ -1160,8 +1153,6 @@ footer{
     background: none;
     cursor: default;
   }
-  .wire-row .go{display: none;}
-  .wire-row:hover .go{transform: none; color: var(--muted-2);}
 
   .brand-cta{padding: 48px 24px 100px;}
   .brand-cta-inner, .leadership-inner{grid-template-columns: 1fr; gap: 50px; min-width: 0;}
