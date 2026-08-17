@@ -36,18 +36,32 @@
   const progress = document.getElementById('progressBar');
   if (!section || !track) return;
 
+  const mobileMq = window.matchMedia('(max-width: 980px)');
   let targetX = 0;
   let currentX = 0;
   let maxTranslate = 0;
 
+  function isMobile() {
+    return mobileMq.matches;
+  }
+
   function recalc() {
+    if (isMobile()) {
+      maxTranslate = 0;
+      targetX = 0;
+      currentX = 0;
+      track.style.transform = '';
+      return;
+    }
     maxTranslate = track.scrollWidth - section.clientWidth + 80;
   }
   recalc();
   window.addEventListener('resize', recalc);
+  if (mobileMq.addEventListener) mobileMq.addEventListener('change', recalc);
 
   // Mouse position → horizontal offset
   section.addEventListener('mousemove', (e) => {
+    if (isMobile()) return;
     const rect = section.getBoundingClientRect();
     const ratio = (e.clientX - rect.left) / rect.width;
     targetX = Math.max(0, Math.min(1, ratio)) * maxTranslate;
@@ -57,16 +71,22 @@
   let touchStartX = 0;
   let touchStartOffset = 0;
   section.addEventListener('touchstart', (e) => {
+    if (isMobile()) return;
     touchStartX = e.touches[0].clientX;
     touchStartOffset = currentX;
   });
   section.addEventListener('touchmove', (e) => {
+    if (isMobile()) return;
     const dx = touchStartX - e.touches[0].clientX;
     targetX = Math.max(0, Math.min(maxTranslate, touchStartOffset + dx));
   });
 
   // Smooth lerp toward targetX
   function tick() {
+    if (isMobile()) {
+      requestAnimationFrame(tick);
+      return;
+    }
     currentX += (targetX - currentX) * 0.08;
     track.style.transform = `translateX(${-currentX}px)`;
     const pct = Math.min(100, (currentX / maxTranslate) * 100);
@@ -98,8 +118,16 @@
 (function NavScroll(){
   const nav = document.querySelector('.nav');
   if (!nav) return;
+  const mobileMq = window.matchMedia('(max-width: 980px)');
 
   window.addEventListener('scroll', () => {
+    if (mobileMq.matches) {
+      nav.style.padding = '';
+      nav.style.background = window.scrollY > 60
+        ? 'rgba(10,7,16,.92)'
+        : '';
+      return;
+    }
     if (window.scrollY > 60) {
       nav.style.padding = '14px 40px';
       nav.style.background = 'rgba(10,7,16,.92)';
